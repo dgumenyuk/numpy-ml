@@ -48,7 +48,7 @@ class Logger:
 
     def log(self, accuracy_train=0, loss_train=0, accuracy_valid=0, loss_valid=0):
         '''
-        jjj
+        Log loss and accuracy
         '''
         self.losses_train.append(loss_train)
         self.accuracies_train.append(accuracy_train)
@@ -57,7 +57,7 @@ class Logger:
 
     def plot_loss_and_accuracy(self, train=True, valid=True):
         '''
-        jj
+        Plot loss and accuracy
         '''
 
         assert train and valid, "Cannot plot accuracy because neither train nor valid."
@@ -84,7 +84,7 @@ class Logger:
   
     def print_last(self):
         '''
-        jjj
+        Print last loss and accuracy
         '''
         print(f"Epoch {len(self.losses_train):2d}, \
                 Train:loss={self.losses_train[-1]:.3f}, accuracy={self.accuracies_train[-1]*100:.1f}%, \
@@ -93,7 +93,7 @@ class Logger:
 
 def plot_samples():
     '''
-    okoko
+    Plot some samples
     '''
     a, _, _ = get_fashion_mnist_dataloaders()
     num_row = 2
@@ -116,7 +116,7 @@ def plot_samples():
 
 def accuracy(y, y_pred):
     '''
-    ll
+    Calculate accuracy
     '''
     #  y shape (10, 1)
     # todo : nombre d'éléments à classifier.
@@ -138,7 +138,7 @@ def accuracy(y, y_pred):
 
 def accuracy_and_loss_whole_dataset(data_loader, model):
     '''
-    ll
+    Calculate accuracy and loss on the whole dataset
     '''
     cardinal = 0
     loss     = 0.
@@ -166,7 +166,7 @@ def accuracy_and_loss_whole_dataset(data_loader, model):
 
 def cross_entropy(y, y_pred): 
     '''
-    kkk
+    Calculate cross entropy loss
     '''
     # todo : calcul de la valeur d'entropie croisée.
     
@@ -178,7 +178,7 @@ def cross_entropy(y, y_pred):
 
 def softmax(x, axis=-1):
     '''
-    kkk
+    Calculate softmax of a tensor along the given axis.
     '''
 
     x_ = x - torch.max(x, dim=1).values.unsqueeze(dim=1) #values #+ 1e-9
@@ -191,7 +191,7 @@ def softmax(x, axis=-1):
   
 def inputs_tilde(x, axis=-1):
     '''
-    lll
+    Transforms the model inputs.
     '''
     # augments the inputs `x` with ones along `axis`
     # todo : implémenter code ici.
@@ -205,11 +205,11 @@ def inputs_tilde(x, axis=-1):
 
 class LinearModel:
     '''
-    fff
+    Linear model class.
     '''
     def __init__(self, num_features, num_classes):
         '''
-        fff
+        Initialization
         '''
         self.params = torch.normal(0, 0.01, (num_features + 1, num_classes))
         self.b = 0
@@ -224,7 +224,7 @@ class LinearModel:
         
     def forward(self, x):
         '''
-        fff
+        Forward pass
         '''
     
         # todo : implémenter calcul des outputs en fonction des inputs `x`.
@@ -257,7 +257,7 @@ class LinearModel:
         '''
         Adam optimizer.
         '''
-        # TODO : implémenter mise à jour des paramètres ici.
+
         self.t += 1
         self.m_t = self.b1 * self.m_t + (1 - self.b1) * grads
         self.v_t = self.b2 * self.v_t + (1 - self.b2) * grads ** 2
