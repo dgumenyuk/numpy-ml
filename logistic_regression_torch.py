@@ -194,7 +194,7 @@ def inputs_tilde(x, axis=-1):
     Transforms the model inputs.
     '''
     # augments the inputs `x` with ones along `axis`
-    # todo : implémenter code ici.
+
 
     ones =  torch.ones(x.shape[0], 1)
     x_hat2 = torch.column_stack((x, ones))
@@ -227,7 +227,6 @@ class LinearModel:
         Forward pass
         '''
     
-        # todo : implémenter calcul des outputs en fonction des inputs `x`.
         inputs = inputs_tilde(x)  # inputs shape (8, 785)
 
         wx = inputs @ self.params  # (8, 785) x (785, 10)
@@ -324,7 +323,7 @@ if __name__ == "__main__":
         print('No GPU available, using the CPU instead.')
         device = torch.device("cpu")
 
-# Montrez les résultats pour différents taux d'apprentissage, e.g. 0.1, 0.01, 0.001, et différentes tailles de mini-batch, e.g. 1, 20, 200, 1000.
+
     batch_size_list = [8, 20, 200, 1000]   # Define ranges in a list
     lr_list = [0.1, 0.01, 0.001]         # Define ranges in a list
 
