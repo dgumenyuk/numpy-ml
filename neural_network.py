@@ -73,18 +73,14 @@ class Logger:
 
 
 def accuracy(y, y_pred) :
-    # todo : nombre d'éléments à classifier.
     
     card_D = y.size(dim=0)
  
-    # todo : calcul du nombre d'éléments bien classifiés.
-    #y_pred = torch.transpose(y_pred, 0, 1)
     y_ = torch.argmax(y, dim = 1)
     y_pred_ = torch.argmax(y_pred, dim = 1)
 
     card_C = sum((y_ == y_pred_)*1)
     
-    # todo : calcul de la précision de classification.
     acc = card_C/card_D
  
     return acc, (card_C, card_D)
@@ -114,18 +110,12 @@ def accuracy_and_loss_whole_dataset(data_loader, model):
     return acc, loss
 
 def inputs_tilde(x, axis=-1):
-    # augments the inputs `x` with ones along `axis`
-    # todo : implémenter code ici.
     ones =  torch.ones(x.shape[0], 1)
     x_hat2 = torch.column_stack((x, ones))
 
     return x_hat2
 
 def softmax(x, axis=-1):
-    # assurez vous que la fonction est numeriquement stable
-    # e.g. softmax(np.array([1000, 10000, 100000], ndim=2))
-    
-    # todo : calcul des valeurs de softmax(x)
     x_ = x - torch.max(x, dim=1).values.unsqueeze(dim=1) #values #+ 1e-9
     e_x = torch.exp(x_)
 
@@ -135,45 +125,33 @@ def softmax(x, axis=-1):
     return softmax#softmax #
 
 def cross_entropy(y, y_pred):
-    # todo : calcul de la valeur d'entropie croisée.
     loss = -torch.sum(y * torch.log(y_pred + 1e-9 ))/y.size(dim=0)
 
     return loss
 
 
 def softmax_cross_entropy_backward(y, y_pred):
-    # todo : calcul de la valeur du gradient de l'entropie croisée composée avec `softmax`
-    #dEror/dy*df(XnW)/dXnW = y - y_pred
 
     values = y_pred - y
     return values
 
 def relu_forward(x):
-    # todo : calcul des valeurs de relu(x)
     values =  torch.max(torch.zeros_like(x),x)
     return values
 
 def relu_backward(d_x, x):
-    # todo : calcul des valeurs du gradient de la fonction `relu`
     
     value = torch.max(torch.zeros_like(x),x)
     values = torch.where(value > 0, 1, 0)
     
     return values*d_x
 
-
-    
-
-# Model est une classe representant votre reseaux de neuronnes
 class MLPModel:
     def __init__(self, n_features, n_hidden_features, n_hidden_layers, n_classes):
         self.n_features        = n_features
         self.n_hidden_features = n_hidden_features
         self.n_hidden_layers   = n_hidden_layers
         self.n_classes         = n_classes
-
-        # todo : initialiser la liste des paramètres Teta de l'estimateur.
-
         
         
         self.params = []
@@ -203,7 +181,6 @@ class MLPModel:
 
 
     def forward(self, x):
-        # todo : implémenter calcul des outputs en fonction des inputs `x`.
         outputs = None
         input = inputs_tilde(x)
 
@@ -217,8 +194,6 @@ class MLPModel:
             self.a.append(inputs_tilde(self.h[i-1]) @ self.params[i])
             self.h.append(relu_forward(self.a[i]))
 
-        # last layer
-
         self.a.append(inputs_tilde(self.h[self.n_hidden_layers-1]) @ self.params[self.n_hidden_layers])
         self.h.append(softmax(self.a[self.n_hidden_layers]))
 
@@ -229,8 +204,7 @@ class MLPModel:
         return outputs
 
     def backward(self, y, y_pred):
-        # todo : implémenter calcul des gradients.
-        # todo : calcul du gradient de l'entropie croisée.
+
         delta_out = [None]*(self.n_hidden_layers+1)
 
         delta_out[self.n_hidden_layers] = softmax_cross_entropy_backward(y, y_pred)
@@ -238,8 +212,6 @@ class MLPModel:
         for i in reversed(range(self.n_hidden_layers)):
             delta_current = delta_out[i+1] @ self.params[i+1].T
             delta_out[i] = relu_backward(delta_current[:, :-1], self.a[i])
-               # delta_out[i] = relu_backward(delta_out[i+1] @ self.params[i+1].T, self.h[i])
-
         grads = [None]*(self.n_hidden_layers+1)
         grads[0] = self.input.T @ delta_out[0] /y.shape[1]
         for i in range(1, self.n_hidden_layers + 1):
@@ -248,7 +220,6 @@ class MLPModel:
         return grads
 
         
-
 
     def sgd_update(self, lr, grads):
         for i in range(len(self.params)):
@@ -274,8 +245,6 @@ def train(model, lr=0.1, nb_epochs=10, sgd=True, data_loader_train=None, data_lo
 
     for epoch in range(nb_epochs+1):
 
-        # at epoch 0 evaluate random initial model
-        #   then for subsequent epochs, do optimize before evaluation.
         if epoch > 0:
             for x, y in data_loader_train:
                 x, y = reshape_input(x, y)
